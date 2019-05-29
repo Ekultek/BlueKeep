@@ -388,7 +388,7 @@ def main():
             for address in addresses.readlines():
                 to_scan.append(address.strip())
     else:
-        info("python bluekeep_poc.py [-i addy1,addy2,...] [-f /path/to/file]")
+        info("python bluekeep_poc.py [-i addy1[,addy2,...]] [-f /path/to/file]")
         exit(1)
     for scan in to_scan:
         info("verifying RDP service on: {}".format(scan))
