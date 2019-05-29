@@ -30,7 +30,7 @@ Development & Testing by [Ekultek](https://github.com/Ekultek)
 
 ### In Closing
 
-You can see some of our research, along with a list of potentially vulnerable targets under the research directory. We started with very little and decided that we weren't going to stop until we had a working exploit. I have been able to execute commands on Windows Server R2 with this PoC personally.
+You can see some of our research, along with a list of potentially vulnerable targets under the research directory. We started with very little and decided that we weren't going to stop until we had a working exploit. I have been able to execute commands on Windows XP with this PoC personally.
 
 **Note**
 
