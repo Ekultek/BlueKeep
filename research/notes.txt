@@ -1,0 +1,5 @@
+https://t.co/amKnSU7lOz
+parameter to change icaBindChannel
+https://github.com/citronneur/rdpy/tree/master/rdpy/protocol/rdp/t125
+http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.331.339&rep=rep1&type=pdf
+https://waitfordebug.wordpress.com/2012/05/08/scapy-rdp-class/
