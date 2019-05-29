@@ -16,17 +16,18 @@ user security context.
 
 # How it works
 
-By sending a specially crafted packet an attacker is able to set the value for the Channel ID to something the RDP service isn't expecting. This creates the conditions for Remote Code Execution to occur. Should the attacker choose to follow up with packets designed to take advantage of this flaw remote code execution can be achieved with System user privileges.
+By sending a specially crafted packet an attacker is able to set the value for the Channel ID to something the RDP service isn't expecting, this causes a memory corruption bug that will create the conditions for Remote Code Execution to occur. Should the attacker choose to follow up with packets designed to take advantage of this flaw remote code execution can be achieved with System user privileges.
 
 ### Credits
+
 Research by [Ekultek](https://github.com/Ekultek) and (VectorSEC)/[NullArray](https://github.com/NullArray)
+
 Development & Testing by [Ekultek](https://github.com/Ekultek)
 
 **Follow us on Twitter**
 
-[Ekultek](https://twitter.com/stay__salty)
-
-[VectorSEC](https://twitter.com/Real__Vector)
+ - [Ekultek](https://twitter.com/stay__salty)
+ - [VectorSEC](https://twitter.com/Real__Vector)
 
 ### In Closing
 
