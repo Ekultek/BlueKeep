@@ -364,7 +364,21 @@ def start_rdp_connection(ip_addresses):
             tls.sendall(DoPduConnectionSequence().client_font_list_pdu())
             returned_packet = tls.recv(8000)
             info("<-- received {} bytes from host: {}".format(hex(len(returned_packet)), ip))
-            ### ~~ PAYLOAD ~~ ###
+
+            # As much as I don't condone hacking and breaking into things.
+            # If you're going to do it, this is where you would put your payload of types.
+            #
+            # To do this you would do something along the lines of:
+            # -----------------------------------------------------
+            #   tls.sendall("\x00\x03\x3e\x00\x00\x00")
+            #   results = tls.recv(8000)
+            #   if "\x0e" in results:
+            #       do_something_else_cool
+            # -----------------------------------------------------
+            # Generating the payloads is hard, especially when alsr is involved with it.
+            # Good luck with that, I will not be sharing any of my payloads because i
+            # don't feel like watching the world burn yet.
+
             info("closing the connection now, this is a PoC not a working exploit")
             results[1].close()
         except Exception as e:
