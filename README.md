@@ -34,4 +34,4 @@ You can see some of our research, along with a list of potentially vulnerable ta
 
 **Note**
 
-There are no payloads. This is jsut a PoC. _HOWEVER_ it is easily ported to an exploit since you can easily add payloads to this.
+There are no payloads. This is just a PoC. _HOWEVER_ it is easily ported to an exploit since you can easily add payloads to this.
