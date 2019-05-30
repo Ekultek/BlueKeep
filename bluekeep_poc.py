@@ -3,11 +3,7 @@ import binascii
 import argparse
 
 from OpenSSL import *
-try:
-    from impacket.impacket.structure import Structure
-except Exception:
-    open("./impacket/__init__.py", "a+").close()
-    from impacket.impacket.structure import Structure
+from impacket.impacket.structure import Structure
 
 
 # impacket structures
