@@ -3,7 +3,7 @@ import binascii
 import argparse
 
 from OpenSSL import *
-from impacket.impacket.structure import Structure
+from impacket.structure import Structure
 
 
 # impacket structures
