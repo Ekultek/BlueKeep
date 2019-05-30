@@ -356,7 +356,7 @@ def start_rdp_connection(ip_addresses):
             tls.sendall(DoPduConnectionSequence().client_synchronization_pdu())
             info("sending Client Control Cooperate PDU packet -->")
             tls.sendall(DoPduConnectionSequence().client_control_cooperate_pdu())
-            info("sending Client Control Requesr PDU packet -->")
+            info("sending Client Control Request PDU packet -->")
             tls.sendall(DoPduConnectionSequence().client_control_request_pdu())
             info("sending Client Persistent Key Length PDU packet -->")
             tls.sendall(DoPduConnectionSequence().client_persistent_key_length_pdu())
@@ -370,10 +370,12 @@ def start_rdp_connection(ip_addresses):
             #
             # To do this you would do something along the lines of:
             # -----------------------------------------------------
-            #   tls.sendall("\x00\x03\x3e\x00\x00\x00")
-            #   results = tls.recv(8000)
-            #   if "\x0e" in results:
-            #       do_something_else_cool
+            # tls.sendall(Packer(
+            #         "0000000c29fbf017000c2946f8c10800450000100028021a400080060a62c0a83682c0a8002036810d3dc0080022ff5"
+            #         "cfba05185501400300000a7910000"
+            #     ).bin_pack())
+            # data = tls.recv(1024)
+            # print repr(data)
             # -----------------------------------------------------
             # Generating the payloads is hard, especially when alsr is involved with it.
             # Good luck with that, I will not be sharing any of my payloads because i
