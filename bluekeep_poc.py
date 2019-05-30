@@ -370,7 +370,10 @@ def start_rdp_connection(ip_addresses):
             #
             # To do this you would do something along the lines of:
             # -----------------------------------------------------
-            #   tls.sendall("\x00\x03\x3e\x00\x00\x00")
+            #   test_packet = (
+            #       "00033e000000"
+            #   )
+            #   tls.sendall(Packer(test_packet).bin_unpack())
             #   results = tls.recv(8000)
             #   if "\x0e" in results:
             #       do_something_else_cool
