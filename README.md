@@ -18,6 +18,10 @@ user security context.
 
 By sending a specially crafted packet an attacker is able to set the value for the Channel ID to something the RDP service isn't expecting, this causes a memory corruption bug that will create the conditions for Remote Code Execution to occur. Should the attacker choose to follow up with packets designed to take advantage of this flaw remote code execution can be achieved with System user privileges.
 
+# Demo
+
+[![to_video](https://user-images.githubusercontent.com/14183473/58647931-31175f80-82ce-11e9-968b-34cb4f28f7f2.png)](https://vimeo.com/339371343)
+
 # Setup
 
 ```
