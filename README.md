@@ -1,8 +1,8 @@
 # Bluekeep PoC
 
-This repo contains research concerning CVE-2019-0708.  
+This repo contains research concerning **CVE-2019-0708**.  
 
-Bluekeep or CVE-2019-0708 is an RCE exploit that effects the following versions of Windows systems:
+_Bluekeep_(CVE-2019-0708) is an RCE exploit that effects the following versions of Windows systems:
 
    - Windows 2003
    - Windows XP
@@ -14,11 +14,11 @@ Bluekeep or CVE-2019-0708 is an RCE exploit that effects the following versions 
 The vulnerability occurs during pre-authorization and has the potential to run arbitrary malicious code in the NT Authority\system 
 user security context.
 
-# How it works
+## How it works
 
 By sending a specially crafted packet an attacker is able to set the value for the Channel ID to something the RDP service isn't expecting, this causes a memory corruption bug that will create the conditions for Remote Code Execution to occur. Should the attacker choose to follow up with packets designed to take advantage of this flaw remote code execution can be achieved with System user privileges.
 
-# Setup
+## Setup
 
 ```
 git clone https://github.com/ekultek/bluekeep && bash setup.sh
