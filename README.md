@@ -21,7 +21,9 @@ By sending a specially crafted packet an attacker is able to set the value for t
 # Setup
 
 ```
-git clone https://github.com/ekultek/bluekeep && bash setup.sh
+git clone https://github.com/ekultek/bluekeep 
+cd bluekeep
+bash setup.sh
 ```
 
 That should do what you need done and fix any issue you have.
