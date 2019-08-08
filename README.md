@@ -36,7 +36,7 @@ Development & Testing by [Ekultek](https://github.com/Ekultek)
 
 **Follow us on Twitter**
 
- - [Ekultek](https://twitter.com/stay__salty)
+ - [Ekultek](https://twitter.com/saltythegod)
  - [VectorSEC](https://twitter.com/Real__Vector)
 
 ### In Closing
