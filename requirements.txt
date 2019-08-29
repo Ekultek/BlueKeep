@@ -1,1 +1,2 @@
 pyopenssl==19.0
+impacket==0.9.19
