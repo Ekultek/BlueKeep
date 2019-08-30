@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 import time
 import socket
 import struct
@@ -19,7 +19,7 @@ class Parser(argparse.ArgumentParser):
     def optparse():
         parser = argparse.ArgumentParser()
         parser.add_argument(
-            "-i", "--ip", dest="ipToAttack", metavar="IP[,IP,IP,..]", default=None,
+            "-i", "--ip", dest="ipToAttack", metavar="IP[IP,IP,...]", default=None,
             help="Pass a list of IP addresses separated by a comma or a single IP address (*default=None)"
         )
         parser.add_argument(
@@ -31,11 +31,11 @@ class Parser(argparse.ArgumentParser):
             help="Pass the architecture of the target you are attacking (*default=64)"
         )
         parser.add_argument(
-            "-t", "--dos-times", type=int, dest="dosTime", default=60, metavar="AMOUNT",
+            "-t", "--dos-times", type=int, dest="dosTime", metavar="AMOUNT", default=60,
             help="Pass how many times you want to DoS the target before exiting (*default=60)"
         )
         parser.add_argument(
-            "-w", "--wait-time", type=int, dest="waitTime", default=70, metavar="SECONDS",
+            "-w", "--wait-time", type=int, dest="waitTime", metavar="SECONDS", default=70,
             help="Pass how long you want to wait in between DoS's (*default=70)"
         )
         parser.add_argument(
@@ -337,7 +337,7 @@ def main():
         for ip in opt.ipToAttack.split(","):
             to_attack.append(ip.strip())
     else:
-        print("usage: python2 bluekeep_dos.py -i IP[IP,IP,...] [-p 3389] [-a 32|64]")
+        print("usage: python bluekeep_dos.py [-i IP[IP,IP,...]] [-p PORT] [-a 32|64]")
         exit(1)
 
     for target in to_attack:

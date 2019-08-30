@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 import socket
 import binascii
 import argparse
@@ -224,15 +224,15 @@ class Parser(argparse.ArgumentParser):
     def optparse():
         parser = argparse.ArgumentParser()
         parser.add_argument(
-            "-i", "--ip", dest="ipAddyList", default=None,
+            "-i", "--ip", dest="ipAddyList", metavar="IP[IP,IP,...]", default=None,
             help="provide a list of IP addresses separated by commas, or a single IP address"
         )
         parser.add_argument(
-            "-p", "--port", dest="targetPort", type=int, default=3389,
+            "-p", "--port", type=int, dest="targetPort", metavar="PORT", default=3389,
             help="Specify the target port number (*default=3389)"
         )
         parser.add_argument(
-            "-f", "--file", dest="ipAddyFile", default=None,
+            "-f", "--file", dest="ipAddyFile", metavar="FILE", default=None,
             help="provide a file containing IP addresses, one per line"
         )
         return parser.parse_args()
@@ -413,7 +413,7 @@ def main():
             for address in addresses.readlines():
                 to_scan.append(address.strip())
     else:
-        info("python2 bluekeep_poc.py [-i addy1[,addy2,...]] [-p 3389] [-f /path/to/file]")
+        info("python bluekeep_poc.py [-i IP[IP,IP,...]] [-p PORT] [-f FILE]")
         exit(1)
     for scan in to_scan:
         info("verifying RDP service on: {}".format(scan))
@@ -425,13 +425,13 @@ def main():
 
 if __name__ == "__main__":
     print("""\033[34m
-  ____  _            _  __               
- |  _ \| |          | |/ /               
- | |_) | |_   _  ___| ' / ___  ___ _ __  
- |  _ <| | | | |/ _ \  < / _ \/ _ \ '_ \ 
+  ____  _            _  __
+ |  _ \| |          | |/ /
+ | |_) | |_   _  ___| ' / ___  ___ _ __
+ |  _ <| | | | |/ _ \  < / _ \/ _ \ '_ \
  | |_) | | |_| |  __/ . \  __/  __/ |_) |
- |____/|_|\__,_|\___|_|\_\___|\___| .__/ 
-                                  | |    
+ |____/|_|\__,_|\___|_|\_\___|\___| .__/
+                                  | |
                                   |_|
 \033[0m""")
     main()
