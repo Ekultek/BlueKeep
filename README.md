@@ -21,8 +21,8 @@ By sending a specially crafted packet an attacker is able to set the value for t
 # Setup
 
 ```
-sudo apt install python python-dev python-setuptools python-pip openssl openssl-dev libcrypt libcrypt-dev
-git clone https://github.com/ekultek/bluekeep 
+sudo apt install python python-dev python-setuptools python-pip openssl openssl-dev git
+git clone https://github.com/ekultek/bluekeep
 cd bluekeep
 pip install -r requirements.txt
 ```
