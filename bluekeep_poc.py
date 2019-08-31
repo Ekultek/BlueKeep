@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import sys
 import socket
 import binascii
 import argparse
@@ -408,13 +409,13 @@ def main():
             open(opt.ipAddyFile).close()
         except IOError:
             error("that file doesn't exist?")
-            exit(1)
+            sys.exit(1)
         with open(opt.ipAddyFile) as addresses:
             for address in addresses.readlines():
                 to_scan.append(address.strip())
     else:
         info("python bluekeep_poc.py [-i IP[IP,IP,...]] [-p PORT] [-f FILE]")
-        exit(1)
+        sys.exit(1)
     for scan in to_scan:
         info("verifying RDP service on: {}".format(scan))
         check_rdp_service(scan, port)
@@ -424,4 +425,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except (KeyboardInterrupt, SystemExit):
+        pass

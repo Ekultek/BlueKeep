@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import sys
 import time
 import socket
 import struct
@@ -338,7 +339,7 @@ def main():
             to_attack.append(ip.strip())
     else:
         print("usage: python bluekeep_dos.py [-i IP[IP,IP,...]] [-p PORT] [-a 32|64]")
-        exit(1)
+        sys.exit(1)
 
     for target in to_attack:
         try:
@@ -376,4 +377,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except (KeyboardInterrupt, SystemExit):
+        pass
