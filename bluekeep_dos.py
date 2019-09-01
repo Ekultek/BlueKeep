@@ -36,8 +36,8 @@ class Parser(argparse.ArgumentParser):
             help="Pass how many times you want to DoS the target before exiting (*default=1)"
         )
         parser.add_argument(
-            "-w", "--wait-time", type=int, dest="waitTime", metavar="SECONDS", default=1,
-            help="Pass how long you want to wait in between DoS's (*default=1)"
+            "-w", "--wait-time", type=int, dest="waitTime", metavar="SECONDS", default=0,
+            help="Pass how long you want to wait in between DoS's (*default=0)"
         )
         parser.add_argument(
             "-v", "--verbose", action="store_true", default=False, dest="runVerbose",
