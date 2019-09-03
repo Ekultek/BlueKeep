@@ -1,1 +1,2 @@
 pyopenssl==19.0
+git+https://github.com/SecureAuthCorp/impacket.git@master

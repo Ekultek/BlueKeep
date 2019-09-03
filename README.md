@@ -21,9 +21,10 @@ By sending a specially crafted packet an attacker is able to set the value for t
 # Setup
 
 ```
-git clone https://github.com/ekultek/bluekeep 
+sudo apt install python python-dev python-setuptools python-pip openssl openssl-dev git
+git clone https://github.com/ekultek/bluekeep
 cd bluekeep
-bash setup.sh
+pip install -r requirements.txt
 ```
 
 That should do what you need done and fix any issue you have.
